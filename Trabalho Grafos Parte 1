@@ -192,7 +192,6 @@ int main(void) {
 	scanf("%d", &opcao);
 
 	switch(opcao){
-
 	case 1:
 		 montaGrafo(matriz,qtdVert,qtdAresta);
 
@@ -204,16 +203,39 @@ int main(void) {
 		break;
 	}
 
-	//chama euleriano
-			if (euler(matriz,ciclo,&tamciclo,qtdVert)){
-			        printf("O Ciclo é: ");
-			        	for (int i=0;i<tamciclo;i++) printf("%d ",(ciclo[i]+1));
-			        printf("\n");
-			        }
-			     else printf("Não tem ciclo euliriano.\n");
-	//fecha euleriano
+	printf("1 - Verificar se tem ciclo hamiltoniano\n");
+	printf("2 - Verificar se tem ciclo Euleriano\n");
+	printf("3 - Escrever os vértices BFS");
+	printf("4 - Escrever os vértices DFS");
+	printf("5 - Escrever as arestas (ou arcos) de um grafo");
+
+	opcao=0;
+	scanf("%d", &opcao);
+
+		switch(opcao){
+		case 1:
+
+			break;
+		case 2://euleriano
+			if (euler(matriz, ciclo, &tamciclo, qtdVert)) {
+				printf("Possui Ciclo Euleriano\n");
+				/*	printf("O Ciclo é: ");
+				for (int i = 0; i < tamciclo; i++)
+					printf("%d ", (ciclo[i] + 1)); */
+				printf("\n");
+			} else
+				printf("Não tem ciclo euliriano.\n");
+			break;
+
+		case 3:
+
+			break;
+
+		case 4:
+
+			break;
+		}
+
 
 	return 0;
 }
-
-
