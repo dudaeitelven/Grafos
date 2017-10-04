@@ -1,1 +1,219 @@
-add codigo aqui
+#include <stdio.h>
+#include <stdlib.h>
+
+
+void criaMatAdjacencia(int matriz[][100], int qtdVert) {
+	int i, j;
+	for (i=0;i<=qtdVert;i++)
+	      for (j=0;j<=qtdVert;j++){
+	              matriz[i][j]=0;
+	}
+}
+
+
+void montaGrafo(int matriz[][100], int qtdVert, int qtdAresta){
+	criaMatAdjacencia(matriz, qtdVert);
+	int i,j,valor;
+
+	while (qtdAresta > 0){
+
+	printf("Digite posicao e valor: (linha coluna valor) \n ");
+	printf("Aviso; Caso nao tem valor, usar default 1\n");
+	scanf("%d %d %d",&i, &j, &valor);
+	fflush(stdin);
+
+	matriz[i-1][j-1] = valor;
+	matriz[j-1][i-1] = valor;
+
+	qtdAresta--;
+	}
+
+	printf("\nMatriz Adjacencia \n");
+
+	for (i = 0; i < qtdVert; i++) {
+		for (j = 0; j < qtdVert; j++) {
+			printf("%d\t", matriz[i][j]);
+		}
+		printf("\n");
+	}
+
+	printf("\n\n");
+
+}
+
+void montaDigrafo(int matriz[][100], int qtdVert, int qtdAresta){
+	criaMatAdjacencia(matriz, qtdVert);
+	int i,j,valor;
+
+	while (qtdAresta > 0){
+
+		printf("Digite posicao e valor: (linha coluna valor) \n ");
+		printf("Aviso; Caso nao tem valor, usar default 1\n");
+		scanf("%d %d %d",&i, &j, &valor);
+		fflush(stdin);
+
+		matriz[i-1][j-1] = valor;
+
+
+		qtdAresta--;
+		}
+
+		printf("\nMatriz Adjacencia \n");
+
+		for (i = 0; i < qtdVert; i++) {
+			for (j = 0; j < qtdVert; j++) {
+				printf("%d\t", matriz[i][j]);
+			}
+			printf("\n");
+		}
+
+		printf("\n\n");
+
+}
+
+int euler(int G[][100], int C_euler[100], int *tamciclo,int Num_Vert) // 1 - tem ; 0 - não tem
+{
+	int Grau[Num_Vert];  // grau de cada vértice
+	int C_aux[100]; // guarda ciclo auxiliar
+
+	for (int i = 0; i < Num_Vert; i++) {
+		Grau[i] = 0;
+		for (int j = 0; j < Num_Vert; j++)
+			Grau[i] += G[i][j];
+		if (Grau[i] % 2 != 0)
+			return (0);
+	}
+	int v = 0;
+	int pos = 0;
+	int G_Total = 0;
+	for (int i = 0; i < Num_Vert; i++)
+		G_Total += Grau[i];
+	while (Grau[v] > 0) // encontra o ciclo inicial
+	{
+		C_euler[pos++] = v;        // acrescenta vértice no primeiro ciclo
+		int j;
+		for (j = 0; G[v][j] == 0; j++)
+			; // encontra próxima aresta não percorrida
+		Grau[v]--;
+		Grau[j]--;
+		G_Total -= 2;   // atualiza graus
+		G[v][j] = G[j][v] = 0;     // elimina aresta
+		v = j;
+	}
+	while (G_Total > 0) // enquanto há arestas não percorridas...
+	{
+		int j;
+		for (j = 0; Grau[C_euler[j]] == 0; j++)
+			; // procura primeiro vértice do ciclo
+			  // já criado que ainda tem arestas a
+			  // percorrer
+		v = C_euler[j];
+		int posaux = 0;
+		int inicaux = j;
+		while (Grau[v] > 0) // encontra ciclo auxiliar
+		{
+			C_aux[posaux++] = v;        // acrescenta vértice no primeiro ciclo
+			int j;
+			for (j = 0; G[v][j] == 0; j++)
+				; // encontra próxima aresta não percorrida
+			Grau[v]--;
+			Grau[j]--;
+			G_Total -= 2;   // atualiza graus
+			G[v][j] = G[j][v] = 0;     // elimina aresta
+			v = j;
+		}
+		// acrescenta ciclo auxiliar no ciclo original
+		for (int i = pos - 1; i >= inicaux; i--)
+			C_euler[i + posaux] = C_euler[i]; // desloca vetor à direita
+		for (int i = 0; i < posaux; i++)
+			C_euler[inicaux + i] = C_aux[i];
+		pos += posaux;
+	}
+	*tamciclo = pos;
+	return 1;
+}
+
+
+
+/*void buscaprofundidade(int matriz[][100], int qtdVert, int *vetorBP, int u,
+		int *q) {
+
+	int v;
+	vetorBP[u] = 1;
+	for (v = 0; v < qtdVert; v++) {
+
+		if (matriz[u][v] == 1 && vetorBP[v] == 0) {
+			q[++r] = v;
+			buscaprofundidade(matriz, qtdVert, vetorBP, v, q);
+		}
+	}
+}
+void printProfundidade(int matriz[][100], int qtdVert, int *q) {
+	int i, origem, vetorBP[100];
+	printf("\nQual e o vertice origem, menor que %d: ", qtdVert);
+	scanf("%d", &origem);
+	fflush(stdin);
+
+	for (i = 0; i < qtdVert; i++)
+		vetorBP[i] = 0;
+
+	q[0] = origem;
+	buscaprofundidade(matriz, qtdVert, vetorBP, origem, q);
+
+	printf("\nVetor ordenado por Busca Profundidade:\n");
+	for (i = 0; i < qtdVert; i++) {
+		if (vetorBP[i] != 0) {
+			printf(" -> %d ", q[i]);
+		}
+	}
+}
+*/
+
+int main(void) {
+	setbuf(stdout, NULL);
+	int matriz[100][100], qtdVert=0, /*q,*/ qtdAresta=0,opcao=0;
+
+	int ciclo[100];
+	int tamciclo;
+
+	printf("Quantidade de vertices e arestas\n");
+	scanf("%d %d", &qtdVert, &qtdAresta);
+	fflush(stdin);
+
+	//q = (int *) malloc(sizeof(int) * qtdVert);
+
+
+
+	//printProfundidade(matriz, qtdVert, q);
+
+	printf("Digite opção: \n");
+	printf("1 - Grafo \n");
+	printf("2 - Digrafo \n");
+	scanf("%d", &opcao);
+
+	switch(opcao){
+
+	case 1:
+		 montaGrafo(matriz,qtdVert,qtdAresta);
+
+
+		break;
+	case 2:
+		montaDigrafo(matriz,qtdVert,qtdAresta);
+
+		break;
+	}
+
+	//chama euleriano
+			if (euler(matriz,ciclo,&tamciclo,qtdVert)){
+			        printf("O Ciclo é: ");
+			        	for (int i=0;i<tamciclo;i++) printf("%d ",(ciclo[i]+1));
+			        printf("\n");
+			        }
+			     else printf("Não tem ciclo euliriano.\n");
+	//fecha euleriano
+
+	return 0;
+}
+
+
